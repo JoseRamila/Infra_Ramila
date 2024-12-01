@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Este flujo de trabajo se ejecutará cuando se haga un push a la rama 'main'
+      - main
 
 jobs:
   build:
@@ -23,7 +23,13 @@ jobs:
           username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
           password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
 
-      - name: Build and push Docker image to ACR
+      - name: Build and push Docker image
         run: |
-          docker build -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/flask-app:${{ github.sha }} .
+          docker build -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/flask-app:latest \
+                       -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/flask-app:${{ github.sha }} .
+          docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/flask-app:latest
           docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/flask-app:${{ github.sha }}
+
+      - name: Mostrar logs
+        run: |
+          docker logs $(docker ps -lq)
