@@ -1,13 +1,10 @@
-# José Rámila
-from flask import Flask, jsonify
+from flask import Flask
 
 app = Flask(__name__)
 
-# Ruta para el endpoint GET
-@app.route('/saludo', methods=['GET'])
-def saludo():
-    return jsonify({'mensaje': 'Hola Mundo'}), 200
+@app.route('/')
+def home():
+    return "¡Hola, mundo! Tu aplicación Flask está funcionando."
 
-# Ejecución de la app
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
